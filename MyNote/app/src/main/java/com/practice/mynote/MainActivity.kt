@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.practice.mynote.ui.screens.my_note_app.MyNoteApp
 import com.practice.mynote.ui.theme.MyNoteTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,25 +22,22 @@ class MainActivity : ComponentActivity() {
 					modifier = Modifier.fillMaxSize(),
 					color = MaterialTheme.colorScheme.background
 				) {
-					Greeting("Android")
+					MyNoteApp()
 				}
 			}
 		}
 	}
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-	Text(
-		text = "Hello $name!",
-		modifier = modifier
-	)
-}
-
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun NoteAppPreview() {
 	MyNoteTheme {
-		Greeting("Android")
+		Surface(
+			modifier = Modifier.fillMaxSize(),
+			color = MaterialTheme.colorScheme.background
+		) {
+			MyNoteApp()
+		}
 	}
 }
