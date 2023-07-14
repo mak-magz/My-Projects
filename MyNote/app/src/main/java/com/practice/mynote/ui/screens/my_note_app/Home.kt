@@ -37,7 +37,7 @@ import com.practice.mynote.ui.theme.MyNoteTheme
 @OptIn(
 	ExperimentalMaterial3Api::class
 )
-fun MyNoteApp() {
+fun Home() {
 	Scaffold(
 		modifier = Modifier,
 		topBar = {
@@ -108,7 +108,7 @@ fun Note(title: String, modifier: Modifier = Modifier) {
 @Composable
 fun MyNoteAppDarkPreview() {
 	MyNoteTheme {
-		MyNoteApp()
+		Home()
 	}
 }
 
@@ -116,6 +116,6 @@ fun MyNoteAppDarkPreview() {
 @Composable
 fun MyNoteAppPreview() {
 	MyNoteTheme {
-		MyNoteApp()
+		Home()
 	}
 }
