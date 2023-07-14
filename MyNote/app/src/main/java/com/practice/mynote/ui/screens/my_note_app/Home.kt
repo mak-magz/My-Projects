@@ -65,22 +65,23 @@ fun Home() {
 			"second",
 			"third"
 		)
-//		Column(modifier = Modifier.padding(contentPadding)) {
-//
-//		}
-		LazyColumn(
-			modifier = Modifier
-				.padding(contentPadding)
-				.fillMaxWidth()
-		) {
-			items(items = titles) { title ->
-				Note(title = title)
-				Spacer(modifier = Modifier.size(10.dp))
-			}
-		}
+
+		NoteList(notes = titles, modifier = Modifier.padding(contentPadding))
 	}
 }
 
+@Composable
+fun NoteList(notes: List<String> ,modifier: Modifier = Modifier) {
+	LazyColumn(
+		modifier = modifier
+			.fillMaxWidth()
+	) {
+		items(items = notes) { title ->
+			Note(title = title)
+			Spacer(modifier = Modifier.size(10.dp))
+		}
+	}
+}
 @Composable
 fun Note(title: String, modifier: Modifier = Modifier) {
 	Row(
