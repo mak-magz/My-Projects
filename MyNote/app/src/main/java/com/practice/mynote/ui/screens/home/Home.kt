@@ -1,4 +1,4 @@
-package com.practice.mynote.ui.screens.my_note_app
+package com.practice.mynote.ui.screens.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +49,7 @@ fun Home() {
 					Text("Notes")
 				},
 				navigationIcon = {
-					IconButton(onClick = { /* doSomething() */ }) {
+					IconButton(onClick = { /* navigate to note screen */ }) {
 						Icon(
 							imageVector = Icons.Filled.Menu,
 							contentDescription = "Localized description"
@@ -58,6 +61,14 @@ fun Home() {
 					Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
 				}
 			)
+		},
+		floatingActionButtonPosition = FabPosition.End,
+		floatingActionButton = {
+			FloatingActionButton(
+				onClick = { /*TODO*/ }
+			) {
+				Icon(imageVector = Icons.Default.Add, contentDescription = "Add notes icon")
+			}
 		}
 	) { contentPadding ->
 		val titles = listOf(
@@ -71,7 +82,7 @@ fun Home() {
 }
 
 @Composable
-fun NoteList(notes: List<String> ,modifier: Modifier = Modifier) {
+fun NoteList(notes: List<String>, modifier: Modifier = Modifier) {
 	LazyColumn(
 		modifier = modifier
 			.fillMaxWidth()
@@ -82,6 +93,7 @@ fun NoteList(notes: List<String> ,modifier: Modifier = Modifier) {
 		}
 	}
 }
+
 @Composable
 fun Note(title: String, modifier: Modifier = Modifier) {
 	Row(
