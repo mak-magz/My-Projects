@@ -74,7 +74,10 @@ fun Home() {
 		val titles = listOf(
 			"First",
 			"second",
-			"third"
+			"third",
+			"fourth",
+			"fifth",
+			"sixth"
 		)
 
 		NoteList(notes = titles, modifier = Modifier.padding(contentPadding))
