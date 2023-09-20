@@ -1,35 +1,30 @@
-package com.practice.todos
+package com.practice.todos.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.practice.todos.HomeScreen
+import com.practice.todos.ToDoScreen
 import com.practice.todos.ui.screens.home.HomeScreen
 import com.practice.todos.ui.screens.todos.ToDos
 
-
 @Composable
-fun ToDosNavigation(
-    navController: NavHostController,
-    startDestination: String,
-    modifier: Modifier = Modifier
-) {
+fun ToDosApp() {
     NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
+        navController = rememberNavController(),
+        startDestination = HomeScreen.route
     ) {
         composable(route = HomeScreen.route) {
             HomeScreen(
-                "Mark"
             )
         }
         composable(route = ToDoScreen.route) {
             ToDos(
-                modifier
+                modifier = Modifier
             )
         }
     }
