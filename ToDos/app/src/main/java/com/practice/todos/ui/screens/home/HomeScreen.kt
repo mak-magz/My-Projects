@@ -39,48 +39,20 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
     val currentDestination = currentBackStack?.destination
     val currentScreen = toDosScreens.find { it.route === currentDestination?.route } ?: com.practice.todos.HomeScreen
-    val canShowFabButton = currentScreen.title === "Home"
 
     // Dialog
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = currentScreen.title)
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* navigate to note screen */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-                actions = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
-                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-                }
-            )
-        },
+        topBar = { HomeTopAppBar(title = currentScreen.title) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            if (canShowFabButton) {
-                FloatingActionButton(
-                    onClick = {
-                        showDialog = true
-                    }
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add notes icon")
-                }
-            }
+            HomeFloatingButton { showDialog = true }
         }
     ) { contentPadding ->
         Surface(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(contentPadding)
                 .padding(horizontal = 16.dp),
             color = MaterialTheme.colorScheme.background
@@ -92,5 +64,36 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 showDialog = false
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTopAppBar(title: String) {
+    TopAppBar(
+        title = {
+            Text(text = title)
+        },
+        navigationIcon = {
+            IconButton(onClick = { /* navigate to note screen */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Localized description"
+                )
+            }
+        },
+        actions = {
+            Icon(imageVector = Icons.Default.Search, contentDescription = null)
+            Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+        }
+    )
+}
+
+@Composable
+fun HomeFloatingButton(onClickCallback: () -> Unit) {
+    FloatingActionButton(
+        onClick = onClickCallback
+    ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "Add notes icon")
     }
 }
