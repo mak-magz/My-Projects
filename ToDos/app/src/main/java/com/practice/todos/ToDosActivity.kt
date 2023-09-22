@@ -7,13 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.practice.todos.ui.ToDosApp
 import com.practice.todos.ui.theme.ToDosTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ToDosActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ToDosTheme {
-                // A surface container using the 'background' color from the theme
                 ToDosApp()
             }
         }

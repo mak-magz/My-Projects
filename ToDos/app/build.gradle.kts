@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
+
 plugins {
     kotlin("kapt")
     id("com.android.application")
@@ -51,6 +53,12 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+    tasks.withType(type = KaptGenerateStubsTask::class) {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -72,10 +80,6 @@ dependencies {
     // Navigation
     val navVersion = "2.7.2"
     implementation("androidx.navigation:navigation-compose:$navVersion")
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-}
-
-kapt {
-    correctErrorTypes = true
+    implementation("com.google.dagger:hilt-android:2.44.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
 }
