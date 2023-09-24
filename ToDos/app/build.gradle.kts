@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
+    id("io.realm.kotlin")
 }
 
 android {
@@ -82,4 +83,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-android-compiler:2.44.2")
+
+    // Realm
+    implementation ("io.realm.kotlin:library-base:1.11.0")
+    // If using device sync
+    // implementation ("io.realm.kotlin:library-sync:1.11.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
 }
