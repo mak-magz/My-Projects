@@ -1,5 +1,7 @@
 package com.practice.todos.di
 
+import com.practice.todos.data.repository.ToDosCategoryRepository
+import com.practice.todos.data.repository.ToDosCategoryRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,10 +16,16 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideRealm() : Realm {
+    fun provideRealm(): Realm {
         val config = RealmConfiguration.create(
             schema = setOf()
         )
         return Realm.open(config)
+    }
+
+    @Singleton
+    @Provides
+    fun provideToDosCategoryRepository(realm: Realm): ToDosCategoryRepository {
+        return ToDosCategoryRepositoryImpl(realm = realm)
     }
 }
