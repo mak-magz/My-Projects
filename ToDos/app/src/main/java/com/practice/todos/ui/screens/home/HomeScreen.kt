@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.practice.todos.toDosScreens
@@ -33,7 +34,7 @@ import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
 
@@ -44,7 +45,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier,
+        modifier = modifier,
         topBar = { HomeTopAppBar(title = currentScreen.title) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
