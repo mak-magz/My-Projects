@@ -1,5 +1,6 @@
 package com.practice.todos.di
 
+import com.practice.todos.data.local.model.Category
 import com.practice.todos.data.repository.ToDosCategoryRepository
 import com.practice.todos.data.repository.ToDosCategoryRepositoryImpl
 import dagger.Module
@@ -18,7 +19,9 @@ object DatabaseModule {
     @Provides
     fun provideRealm(): Realm {
         val config = RealmConfiguration.create(
-            schema = setOf()
+            schema = setOf(
+                Category::class
+            )
         )
         return Realm.open(config)
     }

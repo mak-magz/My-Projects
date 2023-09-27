@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.todos.domain.usecase.GetToDosCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,8 +16,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val cat = useCase.invoke()
-            Log.d("CATEGORIES: ", cat.toString())
+            val cat = useCase.invoke().collect {
+                Log.d("CATEGORIES: ", it.toString())
+            }
         }
     }
 }
