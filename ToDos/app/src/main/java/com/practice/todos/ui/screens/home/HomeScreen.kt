@@ -1,7 +1,13 @@
 package com.practice.todos.ui.screens.home
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -23,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,9 +37,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
+import com.practice.todos.ui.theme.ToDosTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
     val navController = rememberNavController()
@@ -58,7 +65,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltVie
                 .padding(horizontal = 16.dp),
             color = MaterialTheme.colorScheme.background
         ) {
-            Text(text = "hello")
+            CategoryList()
             AddToDoCategoryDialog(
                 showDialog = showDialog
             ) {
@@ -96,5 +103,42 @@ fun HomeFloatingButton(onClickCallback: () -> Unit) {
         onClick = onClickCallback
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = "Add notes icon")
+    }
+}
+
+@Composable
+@Preview(showBackground = true, device = Devices.DEFAULT)
+fun CategoryList(
+    modifier: Modifier = Modifier,
+    categories: List<String> = listOf("asdf", "one", "three" ,"asdf", "asdf", "one", "three", "asdf", "asdf", "one", "three")
+) {
+    ToDosTheme {
+        LazyVerticalGrid(
+            modifier = modifier.fillMaxSize(),
+            columns = GridCells.Adaptive(minSize = 150.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(categories) { category ->
+                CategoryItem(
+                    category = category
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun CategoryItem(
+    modifier: Modifier = Modifier,
+    category: String = "test"
+) {
+    Box(
+        modifier.requiredSize(150.dp)
+    ) {
+        Text(
+            modifier = Modifier.fillMaxSize(),
+            text = category)
     }
 }
