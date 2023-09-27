@@ -8,4 +8,6 @@ interface ToDosCategoryRepository {
 
     fun getCategoriesAsFlow(): Flow<List<Category>>
 
+    suspend fun addCategory(category: Category)
+
 }
