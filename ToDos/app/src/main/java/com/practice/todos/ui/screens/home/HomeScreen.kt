@@ -46,13 +46,19 @@ import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 import com.practice.todos.ui.theme.ToDosTheme
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.practice.todos.ToDoScreen
+import com.practice.todos.ui.navigateSingleTopTo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
-    val navController = rememberNavController()
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val currentBackStack by navController.currentBackStackEntryAsState()
-
     val currentDestination = currentBackStack?.destination
     val currentScreen = toDosScreens.find { it.route === currentDestination?.route } ?: com.practice.todos.HomeScreen
 
@@ -60,7 +66,6 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltVie
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     val categories by viewModel.categories
-
     Scaffold(
         modifier = modifier,
         topBar = { HomeTopAppBar(title = currentScreen.title) },
@@ -76,7 +81,11 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltVie
             color = MaterialTheme.colorScheme.background
         ) {
             CategoryList(
-                categories = categories
+                categories = categories,
+                onItemClicked = {
+                    Log.d("CATEGORY ID: ", it)
+                    navController.navigate(ToDoScreen.route)
+                }
             )
             AddToDoCategoryDialog(
                 showDialog = showDialog,
@@ -124,7 +133,8 @@ fun HomeFloatingButton(onClickCallback: () -> Unit) {
 @Composable
 fun CategoryList(
     modifier: Modifier = Modifier,
-    categories: List<Category> = emptyList()
+    categories: List<Category> = emptyList(),
+    onItemClicked: (categoryId: String) -> Unit
 ) {
     ToDosTheme {
         LazyVerticalGrid(
@@ -135,31 +145,45 @@ fun CategoryList(
         ) {
             items(categories) { category ->
                 CategoryItem(
-                    category = category.title
+                    category = category,
+                    onClickCallback = { onItemClicked(category._id.toHexString()) }
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview(showBackground = true)
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: String = "test"
+    category: Category,
+    onClickCallback: () -> Unit
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation( defaultElevation = 6.dp),
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        onClick = onClickCallback
     ) {
         Row(
-            modifier = Modifier.padding(12.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = category
+                text = category.title
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CategoryItemPreview() {
+    CategoryItem(
+        category = Category().apply { title = "test" },
+        onClickCallback = {}
+    )
 }
