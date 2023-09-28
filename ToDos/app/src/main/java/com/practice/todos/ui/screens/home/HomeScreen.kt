@@ -3,7 +3,9 @@ package com.practice.todos.ui.screens.home
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -14,6 +16,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -117,7 +122,6 @@ fun HomeFloatingButton(onClickCallback: () -> Unit) {
 }
 
 @Composable
-@Preview(showBackground = true, device = Devices.DEFAULT)
 fun CategoryList(
     modifier: Modifier = Modifier,
     categories: List<Category> = emptyList()
@@ -125,7 +129,7 @@ fun CategoryList(
     ToDosTheme {
         LazyVerticalGrid(
             modifier = modifier.fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 150.dp),
+            columns = GridCells.Fixed(1),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -144,11 +148,18 @@ fun CategoryItem(
     modifier: Modifier = Modifier,
     category: String = "test"
 ) {
-    Box(
-        modifier.requiredSize(150.dp)
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation( defaultElevation = 6.dp),
+        modifier = modifier
+            .fillMaxWidth()
     ) {
-        Text(
-            modifier = Modifier.fillMaxSize(),
-            text = category)
+        Row(
+            modifier = Modifier.padding(12.dp).fillMaxWidth()
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = category
+            )
+        }
     }
 }
