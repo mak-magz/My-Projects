@@ -28,65 +28,50 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddToDoCategoryDialog(
+    modifier: Modifier = Modifier,
     showDialog: Boolean = false,
-    onDismissDialog: () -> Unit
+    onDismissDialog: () -> Unit,
+    onClickSave: (title: String) -> Unit
 ) {
     if (showDialog) {
         Dialog(
             onDismissRequest = onDismissDialog,
             properties = DialogProperties(dismissOnClickOutside = false)
         ) {
-            AddToDoCategoryFormCard(
-                closeDialog = onDismissDialog
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AddToDoCategoryFormCard(
-    modifier: Modifier = Modifier,
-    closeDialog: () -> Unit
-) {
-    // TODO: Hoist state to a ViewModel
-    var textValue by rememberSaveable { mutableStateOf("") }
-    Card(
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            OutlinedTextField(
-                value = textValue, onValueChange = { textValue = it },
-                label = { Text(text = "Enter category") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.padding(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+            var title by rememberSaveable { mutableStateOf("") }
+            Card(
+                modifier = modifier
             ) {
-                Button(onClick =  closeDialog) {
-                    Text(text = "CANCEL")
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "ADD")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text(text = "Enter category") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.padding(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(onClick =  onDismissDialog) {
+                            Text(text = "CANCEL")
+                        }
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        Button(onClick = { onClickSave(title) }) {
+                            Text(text = "ADD")
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun AddTodoCategoryDialogPreview() {
-    AddToDoCategoryDialog(
-        showDialog = true
-    ) {}
-}

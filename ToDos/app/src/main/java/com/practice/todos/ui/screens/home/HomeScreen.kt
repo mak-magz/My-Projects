@@ -1,5 +1,6 @@
 package com.practice.todos.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,9 +36,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.practice.todos.data.local.model.Category
 import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 import com.practice.todos.ui.theme.ToDosTheme
+import androidx.compose.runtime.getValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +53,8 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltVie
 
     // Dialog
     var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    val categories by viewModel.categories
 
     Scaffold(
         modifier = modifier,
@@ -65,12 +70,17 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltVie
                 .padding(horizontal = 16.dp),
             color = MaterialTheme.colorScheme.background
         ) {
-            CategoryList()
+            CategoryList(
+                categories = categories
+            )
             AddToDoCategoryDialog(
-                showDialog = showDialog
-            ) {
-                showDialog = false
-            }
+                showDialog = showDialog,
+                onDismissDialog = { showDialog = false },
+                onClickSave = {
+                    showDialog = false
+                    viewModel.addCategory(it)
+                }
+            )
         }
     }
 }
@@ -110,7 +120,7 @@ fun HomeFloatingButton(onClickCallback: () -> Unit) {
 @Preview(showBackground = true, device = Devices.DEFAULT)
 fun CategoryList(
     modifier: Modifier = Modifier,
-    categories: List<String> = listOf("asdf", "one", "three" ,"asdf", "asdf", "one", "three", "asdf", "asdf", "one", "three")
+    categories: List<Category> = emptyList()
 ) {
     ToDosTheme {
         LazyVerticalGrid(
@@ -121,7 +131,7 @@ fun CategoryList(
         ) {
             items(categories) { category ->
                 CategoryItem(
-                    category = category
+                    category = category.title
                 )
             }
         }
