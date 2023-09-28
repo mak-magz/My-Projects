@@ -1,5 +1,6 @@
 package com.practice.todos.ui
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -24,10 +25,15 @@ fun ToDosApp() {
                 navController = navController
             )
         }
-        composable(route = ToDoScreen.route) {
-            ToDosScreen(
-                modifier = Modifier
-            )
+        composable(
+            route = ToDoScreen.routeWithArgs,
+            arguments = ToDoScreen.arguments
+        ) {
+            val id = it.arguments?.getString(ToDoScreen.categoryIdArg)
+            id?.let { categoryID -> ToDosScreen(
+                modifier = Modifier,
+                categoryId = categoryID
+            )}
         }
     }
 }
@@ -40,3 +46,9 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         launchSingleTop = true
         restoreState = true
     }
+
+fun NavHostController.navigateToDetails(categoryID: String) {
+    val route = "${ToDoScreen.route}/$categoryID"
+    Log.d("ROUTE: ", route)
+    navigateSingleTopTo(route)
+}

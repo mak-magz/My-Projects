@@ -1,5 +1,8 @@
 package com.practice.todos
 
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 interface ToDosDestination {
     val route: String
     val title: String
@@ -11,8 +14,13 @@ object HomeScreen: ToDosDestination {
 }
 
 object ToDoScreen: ToDosDestination {
-    override val route = "todos/todo"
+    override val route = "todos/detail"
     override val title = "todo"
+    const val categoryIdArg = "category_id"
+    val routeWithArgs = "${route}/{${categoryIdArg}}"
+    val arguments = listOf(
+        navArgument(categoryIdArg) { type = NavType.StringType }
+    )
 }
 
 val toDosScreens = listOf<ToDosDestination>(

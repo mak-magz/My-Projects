@@ -2,12 +2,10 @@ package com.practice.todos.ui.screens.home
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -16,7 +14,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,21 +32,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.practice.todos.data.local.model.Category
 import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
+import com.practice.todos.ui.navigateToDetails
 import com.practice.todos.ui.theme.ToDosTheme
-import androidx.compose.runtime.getValue
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.practice.todos.ToDoScreen
-import com.practice.todos.ui.navigateSingleTopTo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,7 +77,7 @@ fun HomeScreen(
                 categories = categories,
                 onItemClicked = {
                     Log.d("CATEGORY ID: ", it)
-                    navController.navigate(ToDoScreen.route)
+                    navController.navigateToDetails(it)
                 }
             )
             AddToDoCategoryDialog(
