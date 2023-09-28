@@ -43,7 +43,10 @@ fun ToDosScreen(
     Log.d("CAT ID: ", categoryId)
     Scaffold(
         modifier = modifier,
-        topBar = { ToDosTopAppBar(title = "ToDos") }
+        topBar = { ToDosTopAppBar(
+            title = "ToDos",
+            onBackIconClicked = { navController.popBackStack() }
+        )}
     ) { contentPadding ->
         Surface(
             modifier = Modifier
@@ -58,13 +61,16 @@ fun ToDosScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToDosTopAppBar(title: String) {
+fun ToDosTopAppBar(
+    title: String,
+    onBackIconClicked: () -> Unit
+) {
     TopAppBar(
         title = {
             Text(text = title)
         },
         navigationIcon = {
-            IconButton(onClick = { /* navigate to note screen */ }) {
+            IconButton(onClick = onBackIconClicked) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Localized description"

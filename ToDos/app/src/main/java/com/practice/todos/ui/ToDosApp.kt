@@ -32,7 +32,8 @@ fun ToDosApp() {
             val id = it.arguments?.getString(ToDoScreen.categoryIdArg)
             id?.let { categoryID -> ToDosScreen(
                 modifier = Modifier,
-                categoryId = categoryID
+                categoryId = categoryID,
+                navController = navController
             )}
         }
     }
