@@ -4,27 +4,30 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.todos.data.local.model.Category
-import com.practice.todos.domain.usecase.AddToDoCategoryUseCase
-import com.practice.todos.domain.usecase.GetToDosCategoriesUseCase
+import com.practice.todos.data.local.model.ToDos
+import com.practice.todos.domain.usecase.AddToDosUseCase
+import com.practice.todos.domain.usecase.DeleteToDosUseCase
+import com.practice.todos.domain.usecase.GetToDosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCase: GetToDosCategoriesUseCase,
-    private val addCategoryUseCase: AddToDoCategoryUseCase
+    private val getToDosUseCase: GetToDosUseCase,
+    private val addCategoryUseCase: AddToDosUseCase,
+    private val deleteToDosUseCase: DeleteToDosUseCase
 ): ViewModel() {
 
-    private val _categories = mutableStateOf(emptyList<Category>())
+    private val _categories = mutableStateOf(emptyList<ToDos>())
     val categories = _categories
 
     init {
         viewModelScope.launch {
-            useCase.invoke().collect {
+            getToDosUseCase.invoke().collect {
                 _categories.value = it
                 Log.d("CATEGORIES: ", categories.value.toString())
             }
@@ -39,5 +42,9 @@ class HomeViewModel @Inject constructor(
                 Log.e("EXCEPTION: ", e.toString())
             }
         }
+    }
+
+    fun deleteToDos(id: ObjectId) {
+
     }
 }

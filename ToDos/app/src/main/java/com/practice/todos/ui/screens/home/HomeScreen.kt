@@ -38,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.practice.todos.data.local.model.Category
+import com.practice.todos.data.local.model.ToDos
 import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 import com.practice.todos.ui.navigateToDetails
@@ -126,7 +126,7 @@ fun HomeFloatingButton(onClickCallback: () -> Unit) {
 @Composable
 fun CategoryList(
     modifier: Modifier = Modifier,
-    categories: List<Category> = emptyList(),
+    categories: List<ToDos> = emptyList(),
     onItemClicked: (categoryId: String) -> Unit
 ) {
     ToDosTheme {
@@ -138,7 +138,7 @@ fun CategoryList(
         ) {
             items(categories) { category ->
                 CategoryItem(
-                    category = category,
+                    toDos = category,
                     onClickCallback = { onItemClicked(category._id.toHexString()) }
                 )
             }
@@ -150,7 +150,7 @@ fun CategoryList(
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: Category,
+    toDos: ToDos,
     onClickCallback: () -> Unit
 ) {
     ElevatedCard(
@@ -166,7 +166,7 @@ fun CategoryItem(
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = category.title
+                text = toDos.title
             )
         }
     }
@@ -176,7 +176,7 @@ fun CategoryItem(
 @Composable
 fun CategoryItemPreview() {
     CategoryItem(
-        category = Category().apply { title = "test" },
+        toDos = ToDos().apply { title = "test" },
         onClickCallback = {}
     )
 }
