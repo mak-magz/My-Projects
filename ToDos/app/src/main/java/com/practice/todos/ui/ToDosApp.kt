@@ -3,6 +3,7 @@ package com.practice.todos.ui
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
@@ -15,11 +16,15 @@ import com.practice.todos.HomeScreen
 import com.practice.todos.ToDoScreen
 import com.practice.todos.ui.screens.home.HomeScreen
 import com.practice.todos.ui.screens.login.LoginScreen
+import com.practice.todos.ui.screens.login.LoginViewModel
 import com.practice.todos.ui.screens.todos.ToDosScreen
 
 @Composable
 fun ToDosApp() {
     val navController = rememberNavController()
+    val vm: LoginViewModel = hiltViewModel()
+
+
     NavHost(
         navController = navController,
         startDestination = "auth"
