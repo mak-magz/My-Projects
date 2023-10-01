@@ -9,6 +9,8 @@ class ToDos: RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
 
+    var owner_id: String = ""
+
     @Index
     var title: String = ""
 }
