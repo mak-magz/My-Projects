@@ -87,8 +87,8 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44.2")
 
     // Realm
-    implementation ("io.realm.kotlin:library-base:1.11.0")
+//    implementation ("io.realm.kotlin:library-base:1.11.0")
     // If using device sync
-    // implementation ("io.realm.kotlin:library-sync:1.11.0")
+    implementation ("io.realm.kotlin:library-sync:1.11.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
 }
