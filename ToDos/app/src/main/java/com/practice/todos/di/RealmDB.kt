@@ -20,18 +20,6 @@ import javax.inject.Singleton
 
 @Singleton
 class RealmDB @Inject constructor(): Database {
-
-//    companion object {
-//
-//        @Volatile
-//        private var instance: RealmDB? = null
-//
-//        fun getInstance() =
-//            instance ?: synchronized(this) {
-//                instance ?: RealmDB().also { instance = it }
-//            }
-//    }
-
     private val app = App.create("application-0-hqyoc")
 
     private var realm: Realm? = null
