@@ -22,7 +22,7 @@ class AddToDosUseCase @Inject constructor(
 
             Log.d("TODO ADD", toDos.owner_id)
 
-            repository.addCategory(toDos)
+            repository.addToDos(toDos)
         }
     }
 }

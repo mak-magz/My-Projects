@@ -13,7 +13,7 @@ class DeleteToDosUseCase @Inject constructor(
     suspend operator fun invoke(id: ObjectId): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                repository.deleteCategory(id)
+                repository.deleteToDos(id)
                 return@withContext true
             } catch (e: Exception) {
                 return@withContext false

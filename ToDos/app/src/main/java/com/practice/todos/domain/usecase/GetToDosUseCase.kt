@@ -9,6 +9,6 @@ class GetToDosUseCase @Inject constructor(
     private val repository: ToDosRepository
 ) {
     operator fun invoke(): Flow<List<ToDos>> {
-        return repository.getCategoriesAsFlow()
+        return repository.getToDos()
     }
 }

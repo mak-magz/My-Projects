@@ -2,7 +2,6 @@ package com.practice.todos.data.repository
 
 import android.util.Log
 import com.practice.todos.data.local.model.ToDos
-import com.practice.todos.di.DatabaseModule
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
@@ -15,15 +14,15 @@ class ToDosRepositoryImpl @Inject constructor(val realm: Realm) : ToDosRepositor
         return listOf("One", "Two")
     }
 
-    override fun getCategoriesAsFlow(): Flow<List<ToDos>> {
+    override fun getToDos(): Flow<List<ToDos>> {
         return realm.query(ToDos::class).asFlow().map { it.list }
     }
 
-    override suspend fun addCategory(toDos: ToDos) {
+    override suspend fun addToDos(toDos: ToDos) {
         realm.write { copyToRealm(toDos)}
     }
 
-    override suspend fun deleteCategory(id: ObjectId) {
+    override suspend fun deleteToDos(id: ObjectId) {
         realm.write {
             val person = query<ToDos>(query = "_id == $0", id).first().find()
             try {

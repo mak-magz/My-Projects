@@ -7,9 +7,9 @@ import org.mongodb.kbson.ObjectId
 interface ToDosRepository {
     fun getCategories(): List<String>
 
-    fun getCategoriesAsFlow(): Flow<List<ToDos>>
+    fun getToDos(): Flow<List<ToDos>>
 
-    suspend fun addCategory(toDos: ToDos)
+    suspend fun addToDos(toDos: ToDos)
 
-    suspend fun deleteCategory(id: ObjectId)
+    suspend fun deleteToDos(id: ObjectId)
 }
