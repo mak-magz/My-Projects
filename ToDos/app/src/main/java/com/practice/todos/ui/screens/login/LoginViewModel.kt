@@ -6,13 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.todos.di.Database
 import com.practice.todos.di.RealmDB
+import com.practice.todos.domain.usecase.LoginAnonymouslyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(val realmDB: Database): ViewModel() {
+class LoginViewModel @Inject constructor(
+    val realmDB: Database,
+    private val loginAnonUseCase: LoginAnonymouslyUseCase
+): ViewModel() {
 
     private val _loggedIn = mutableStateOf(false)
     val isLoggedIn = _loggedIn
@@ -29,3 +33,5 @@ class LoginViewModel @Inject constructor(val realmDB: Database): ViewModel() {
         }
     }
 }
+
+sealed class Login

@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.todos.data.local.model.ToDos
+import com.practice.todos.domain.model.Result
 import com.practice.todos.domain.usecase.AddToDosUseCase
 import com.practice.todos.domain.usecase.DeleteToDosUseCase
 import com.practice.todos.domain.usecase.GetToDosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 import java.lang.Exception
@@ -24,6 +26,8 @@ class HomeViewModel @Inject constructor(
 
     private val _categories = mutableStateOf(emptyList<ToDos>())
     val categories = _categories
+
+    private val _loginState = MutableStateFlow(Result)
 
     init {
         viewModelScope.launch {
