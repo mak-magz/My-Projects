@@ -10,7 +10,7 @@ import javax.inject.Inject
 class DeleteToDosUseCase @Inject constructor(
     private val repository: ToDosRepository,
 ) {
-    suspend operator fun invoke(id: ObjectId): Boolean {
+    suspend operator fun invoke(id: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 repository.deleteToDos(id)

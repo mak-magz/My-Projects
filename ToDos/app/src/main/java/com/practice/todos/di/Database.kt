@@ -1,10 +1,12 @@
-package com.practice.todos.data.repository
+package com.practice.todos.di
 
 import com.practice.todos.data.local.model.ToDos
 import kotlinx.coroutines.flow.Flow
-import org.mongodb.kbson.ObjectId
 
-interface ToDosRepository {
+interface Database {
+
+    suspend fun init(): Boolean
+
     fun getToDos(): Flow<List<ToDos>>
 
     suspend fun addToDos(toDos: ToDos)
