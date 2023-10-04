@@ -2,33 +2,25 @@ package com.practice.todos.di
 
 import android.util.Log
 import com.practice.todos.data.local.model.ToDos
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.App
-import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton
-class RealmDB @Inject constructor(): Database {
+class RealmDB @Inject constructor() : Database {
     private val app = App.create("application-0-hqyoc")
 
     private var realm: Realm? = null
 
-    override suspend fun init(): Boolean {
-        return withContext(Dispatchers.IO) {
-            val anon = Credentials.anonymous(reuseExisting = false)
-            Log.d("LOGIN CRED: ", anon.toString())
-            val user = app.login(anon)
+    override fun init(user: User) {
+        try {
             val config = SyncConfiguration.Builder(user, setOf(ToDos::class))
                 .initialSubscriptions { realm ->
                     add(
@@ -40,9 +32,8 @@ class RealmDB @Inject constructor(): Database {
                 }
                 .build()
             this@RealmDB.realm = Realm.open(config)
-            Log.d("CURRENT REALM: ", realm.toString())
-            Log.d("CURRENT USER: ", user.toString())
-            return@withContext true
+        } catch (e: Exception) {
+            Log.e("REALM SYNC ERROR: ", e.toString())
         }
     }
 
@@ -51,7 +42,7 @@ class RealmDB @Inject constructor(): Database {
     }
 
     override suspend fun addToDos(toDos: ToDos) {
-        realm!!.write { copyToRealm(toDos)}
+        realm!!.write { copyToRealm(toDos) }
     }
 
     override suspend fun deleteToDos(id: String) {

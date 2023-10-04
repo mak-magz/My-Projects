@@ -1,13 +1,17 @@
 package com.practice.todos.ui.screens.login
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.todos.di.Database
 import com.practice.todos.di.RealmDB
+import com.practice.todos.domain.model.Result
 import com.practice.todos.domain.usecase.LoginAnonymouslyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.mongodb.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -16,22 +20,54 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     val realmDB: Database,
     private val loginAnonUseCase: LoginAnonymouslyUseCase
-): ViewModel() {
+) : ViewModel() {
 
-    private val _loggedIn = mutableStateOf(false)
-    val isLoggedIn = _loggedIn
+    private val _loginUIState = MutableStateFlow(LoginUIState())
+    val loginUIState = _loginUIState.asStateFlow()
+
     fun login() {
         viewModelScope.launch {
-            try {
-//                val db = RealmDB.getInstance()
-                val success = realmDB.init()
-                Log.d("LOGIN: ", success.toString())
-                _loggedIn.value = success
-            } catch (e: Exception) {
-                Log.e("EXCEPTION: ", e.toString())
+            loginAnonUseCase.invoke().collect {
+                when (it) {
+                    is Result.Error -> {
+                        _loginUIState.update { currentState ->
+                            currentState.copy(
+                                isLoggingIn = false,
+                                loginError = it.exception,
+                                currentUser = null
+                            )
+                        }
+                    }
+
+                    Result.Loading -> {
+                        _loginUIState.update { currentState ->
+                            currentState.copy(
+                                isLoggingIn = true,
+                                loginError = null,
+                                currentUser = null
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        _loginUIState.update { currentState ->
+                            currentState.copy(
+                                isLoggingIn = false,
+                                currentUser = it.data,
+                                loginError = null,
+                                isLoggedIn = true
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-sealed class Login
+data class LoginUIState(
+    val isLoggingIn: Boolean = false,
+    val currentUser: User? = null,
+    val isLoggedIn: Boolean = false,
+    val loginError: Exception? = null
+)
