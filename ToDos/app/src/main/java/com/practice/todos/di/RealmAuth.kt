@@ -32,4 +32,8 @@ class RealmAuth @Inject constructor(
         }
     }
 
+    override fun getCurrentUser(): User? {
+        return app.currentUser
+    }
+
 }

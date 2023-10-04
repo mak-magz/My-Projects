@@ -22,12 +22,25 @@ import com.practice.todos.ui.screens.todos.ToDosScreen
 @Composable
 fun ToDosApp() {
     val navController = rememberNavController()
-    val vm: LoginViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
 
+    val user = authViewModel.getCurrentUser()!!
+    var startDestination = "auth"
+    user.let {
+        if (user.loggedIn) {
+            val initResult = authViewModel.initializeDB(user)
+
+            if (initResult) {
+                startDestination = "main"
+            } else {
+                Log.e("REALM INITIALIZATION: ", "FAILED")
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
-        startDestination = "auth"
+        startDestination = startDestination
     ) {
         authGraph(navController = navController)
         mainAppGraph(navController = navController)

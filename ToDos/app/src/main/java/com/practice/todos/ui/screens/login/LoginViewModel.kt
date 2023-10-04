@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    val realmDB: Database,
     private val loginAnonUseCase: LoginAnonymouslyUseCase
 ) : ViewModel() {
 
@@ -27,7 +26,7 @@ class LoginViewModel @Inject constructor(
 
     fun login() {
         viewModelScope.launch {
-            loginAnonUseCase.invoke().collect {
+            loginAnonUseCase().collect {
                 when (it) {
                     is Result.Error -> {
                         _loginUIState.update { currentState ->

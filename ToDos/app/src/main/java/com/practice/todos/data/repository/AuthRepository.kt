@@ -9,6 +9,5 @@ interface AuthRepository {
     fun loginAnonymously(): Flow<Result<User>>
 
     suspend fun logout()
-
-    fun getCurrentUser(): Any
+    fun getCurrentUser(): User?
 }

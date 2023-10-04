@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getToDosUseCase.invoke().collect {
+            getToDosUseCase().collect {
                 _categories.value = it
                 Log.d("CATEGORIES: ", categories.value.toString())
             }

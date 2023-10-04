@@ -18,7 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getCurrentUser(): Any {
-        TODO("Not yet implemented")
+    override fun getCurrentUser(): User? {
+        return realmAuth.getCurrentUser()
     }
 }
