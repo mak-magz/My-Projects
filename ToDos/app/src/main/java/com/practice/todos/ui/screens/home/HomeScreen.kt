@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -29,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -43,17 +45,20 @@ import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 import com.practice.todos.ui.navigateToDetails
 import com.practice.todos.ui.theme.ToDosTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    drawerState: DrawerState,
     navController: NavHostController = rememberNavController(),
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
-    val currentScreen = toDosScreens.find { it.route === currentDestination?.route } ?: com.practice.todos.HomeScreen
+    val currentScreen = toDosScreens.find { it.route === currentDestination?.route }
+        ?: com.practice.todos.HomeScreen
 
     // Dialog
     var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -61,7 +66,12 @@ fun HomeScreen(
     val categories by viewModel.categories
     Scaffold(
         modifier = modifier,
-        topBar = { HomeTopAppBar(title = currentScreen.title) },
+        topBar = {
+            HomeTopAppBar(
+                title = currentScreen.title,
+                drawerState = drawerState
+            )
+        },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             HomeFloatingButton { showDialog = true }
@@ -94,13 +104,22 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(title: String) {
+fun HomeTopAppBar(
+    title: String,
+    drawerState: DrawerState
+) {
+    val scope = rememberCoroutineScope()
     TopAppBar(
         title = {
             Text(text = title)
         },
         navigationIcon = {
-            IconButton(onClick = { /* navigate to note screen */ }) {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Localized description"
@@ -154,7 +173,7 @@ fun CategoryItem(
     onClickCallback: () -> Unit
 ) {
     ElevatedCard(
-        elevation = CardDefaults.cardElevation( defaultElevation = 6.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = modifier
             .fillMaxWidth(),
         onClick = onClickCallback

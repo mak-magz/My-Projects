@@ -15,7 +15,6 @@ import javax.inject.Singleton
 
 @Singleton
 class RealmDB @Inject constructor() : Database {
-    private val app = App.create("application-0-hqyoc")
 
     private var realm: Realm? = null
 
