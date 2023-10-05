@@ -35,6 +35,7 @@ import com.practice.todos.ToDoScreen
 import com.practice.todos.ui.screens.home.HomeScreen
 import com.practice.todos.ui.screens.login.LoginScreen
 import com.practice.todos.ui.screens.todos.ToDosScreen
+import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,11 +46,23 @@ fun ToDosApp(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
     val loginUiState by authViewModel.authState.collectAsState()
-    AuthStateChecker(authState = loginUiState, navController = navController)
-
-    val user = authViewModel.getCurrentUser()
     var startDestination = "auth"
-    
+
+    AuthStateChecker(authState = loginUiState, navController = navController) { user ->
+        user.let {
+            if (it.loggedIn) {
+                val initResult = authViewModel.initializeDB(it)
+
+                if (initResult) {
+                    startDestination = "main"
+                    Log.d("REALM INITIALIZATION: ", "SUCCESS")
+                } else {
+                    Log.e("REALM INITIALIZATION: ", "FAILED")
+                }
+            }
+        }
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -79,19 +92,6 @@ fun ToDosApp(
             }
         }
     ) {
-        user.let {
-            if (user?.loggedIn == true) {
-                val initResult = authViewModel.initializeDB(user)
-
-                if (initResult) {
-                    startDestination = "main"
-                    Log.d("REALM INITIALIZATION: ", "SUCCESS")
-                } else {
-                    Log.e("REALM INITIALIZATION: ", "FAILED")
-                }
-            }
-        }
-
         NavHost(
             navController = navController,
             startDestination = startDestination
@@ -152,10 +152,11 @@ fun NavGraphBuilder.mainAppGraph(navController: NavHostController, drawerState: 
 }
 
 @Composable
-internal fun AuthStateChecker(authState: AuthState<*>, navController: NavHostController) {
+internal fun AuthStateChecker(authState: AuthState<*>, navController: NavHostController, userCallback: (user: User) -> Unit) {
     when(authState) {
         is AuthState.LoggedIn -> {
             Log.e("STATE", "LOGGED IN")
+            userCallback(authState.user as User)
         }
         is AuthState.LoggedOut -> {
             Log.e("STATE", "LOGGED OUT")
