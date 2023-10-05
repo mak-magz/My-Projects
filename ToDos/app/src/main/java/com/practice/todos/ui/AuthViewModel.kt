@@ -49,6 +49,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    // TODO: Create custom user class
     fun getCurrentUser(): User? {
         return getCurrentUserUseCase()
     }
