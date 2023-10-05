@@ -10,6 +10,7 @@ interface AuthRepository {
     fun loginAnonymously(): Flow<Result<User>>
 
     suspend fun logout()
+
     fun getCurrentUser(): User?
 
     fun getAuthStateAsFlow(): Flow<AuthenticationChange>

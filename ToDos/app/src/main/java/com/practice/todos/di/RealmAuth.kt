@@ -38,7 +38,7 @@ class RealmAuth @Inject constructor(
     }
 
     override suspend fun logout() {
-        TODO("Not yet implemented")
+        app.currentUser?.logOut()
     }
 
     override fun getAuthStateAsFlow(): Flow<AuthenticationChange> {

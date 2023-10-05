@@ -16,7 +16,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout() {
-        TODO("Not yet implemented")
+        realmAuth.logout()
     }
 
     override fun getCurrentUser(): User? {

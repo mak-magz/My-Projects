@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.practice.todos.domain.usecase.GetAuthStateUseCase
 import com.practice.todos.domain.usecase.GetCurrentUserUseCase
 import com.practice.todos.domain.usecase.InitializeDBUseCase
+import com.practice.todos.domain.usecase.LogoutUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.mongodb.LoggedIn
 import io.realm.kotlin.mongodb.LoggedOut
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val initializeDBUseCase: InitializeDBUseCase,
-    private val getAuthStateUseCase: GetAuthStateUseCase
+    private val getAuthStateUseCase: GetAuthStateUseCase,
+    private val logoutUserUseCase: LogoutUserUseCase
 ): ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState<*>>(AuthState.Loading)
@@ -49,13 +51,20 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun initializeDB(user: User): Boolean {
+        return initializeDBUseCase(user)
+    }
+
     // TODO: Create custom user class
     fun getCurrentUser(): User? {
         return getCurrentUserUseCase()
     }
 
-    fun initializeDB(user: User): Boolean {
-        return initializeDBUseCase(user)
+    fun logout() {
+        viewModelScope.launch {
+            logoutUserUseCase()
+            return@launch
+        }
     }
 }
 

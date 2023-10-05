@@ -19,6 +19,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,6 +35,7 @@ import com.practice.todos.ToDoScreen
 import com.practice.todos.ui.screens.home.HomeScreen
 import com.practice.todos.ui.screens.login.LoginScreen
 import com.practice.todos.ui.screens.todos.ToDosScreen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +47,7 @@ fun ToDosApp(
     val loginUiState by authViewModel.authState.collectAsState()
     AuthStateChecker(authState = loginUiState, navController = navController)
 
-    val user = authViewModel.getCurrentUser()!!
+    val user = authViewModel.getCurrentUser()
     var startDestination = "auth"
     
     ModalNavigationDrawer(
@@ -59,9 +61,15 @@ fun ToDosApp(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
+                    val scope = rememberCoroutineScope()
                     OutlinedButton(
                         modifier = Modifier,
-                        onClick = { /*TODO*/ }) {
+                        onClick = {
+                            authViewModel.logout()
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }) {
                         Text(
                             text = "LOGOUT",
                             color = MaterialTheme.colorScheme.error,
@@ -72,7 +80,7 @@ fun ToDosApp(
         }
     ) {
         user.let {
-            if (user.loggedIn) {
+            if (user?.loggedIn == true) {
                 val initResult = authViewModel.initializeDB(user)
 
                 if (initResult) {
@@ -151,6 +159,7 @@ internal fun AuthStateChecker(authState: AuthState<*>, navController: NavHostCon
         }
         is AuthState.LoggedOut -> {
             Log.e("STATE", "LOGGED OUT")
+            navController.navigateSingleTopTo("auth")
         }
         is AuthState.Loading -> {
             Log.e("AUTH STATE", "INITIALIZING AUTH STATE . . . ")

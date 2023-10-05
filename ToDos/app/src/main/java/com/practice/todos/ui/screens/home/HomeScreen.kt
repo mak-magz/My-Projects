@@ -46,6 +46,7 @@ import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 import com.practice.todos.ui.navigateToDetails
 import com.practice.todos.ui.theme.ToDosTheme
 import kotlinx.coroutines.launch
+import com.practice.todos.HomeScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +59,7 @@ fun HomeScreen(
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
     val currentScreen = toDosScreens.find { it.route === currentDestination?.route }
-        ?: com.practice.todos.HomeScreen
+        ?: HomeScreen
 
     // Dialog
     var showDialog by rememberSaveable { mutableStateOf(false) }
