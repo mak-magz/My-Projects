@@ -2,6 +2,7 @@ package com.practice.todos.data.repository
 
 import com.practice.todos.domain.model.Result
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.AuthenticationChange
 import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.flow.Flow
 
@@ -10,4 +11,6 @@ interface AuthRepository {
 
     suspend fun logout()
     fun getCurrentUser(): User?
+
+    fun getAuthStateAsFlow(): Flow<AuthenticationChange>
 }

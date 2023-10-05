@@ -10,6 +10,7 @@ import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.practice.todos.domain.model.Result
+import io.realm.kotlin.mongodb.AuthenticationChange
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -34,6 +35,14 @@ class RealmAuth @Inject constructor(
 
     override fun getCurrentUser(): User? {
         return app.currentUser
+    }
+
+    override suspend fun logout() {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAuthStateAsFlow(): Flow<AuthenticationChange> {
+        return app.authenticationChangeAsFlow()
     }
 
 }

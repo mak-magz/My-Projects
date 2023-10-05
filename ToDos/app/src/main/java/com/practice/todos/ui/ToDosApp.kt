@@ -17,6 +17,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,6 +42,9 @@ fun ToDosApp(
     authViewModel: AuthViewModel = hiltViewModel(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
+    val loginUiState by authViewModel.authState.collectAsState()
+    AuthStateChecker(authState = loginUiState, navController = navController)
+
     val user = authViewModel.getCurrentUser()!!
     var startDestination = "auth"
     
@@ -134,6 +139,21 @@ fun NavGraphBuilder.mainAppGraph(navController: NavHostController, drawerState: 
                     navController = navController
                 )
             }
+        }
+    }
+}
+
+@Composable
+internal fun AuthStateChecker(authState: AuthState<*>, navController: NavHostController) {
+    when(authState) {
+        is AuthState.LoggedIn -> {
+            Log.e("STATE", "LOGGED IN")
+        }
+        is AuthState.LoggedOut -> {
+            Log.e("STATE", "LOGGED OUT")
+        }
+        is AuthState.Loading -> {
+            Log.e("AUTH STATE", "INITIALIZING AUTH STATE . . . ")
         }
     }
 }
