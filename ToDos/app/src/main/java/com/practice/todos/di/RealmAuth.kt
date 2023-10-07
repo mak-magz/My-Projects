@@ -38,6 +38,7 @@ class RealmAuth @Inject constructor(
     }
 
     override suspend fun logout() {
+        Log.e("CLICK: ", "LOGOUT")
         app.currentUser?.logOut()
     }
 

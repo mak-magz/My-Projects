@@ -25,7 +25,7 @@ class AuthViewModel @Inject constructor(
     private val logoutUserUseCase: LogoutUserUseCase
 ): ViewModel() {
 
-    private val _authState = MutableStateFlow<AuthState<*>>(AuthState.Loading)
+    private val _authState = MutableStateFlow(AppState())
     val authState  = _authState.asStateFlow()
 
     init {
@@ -34,25 +34,34 @@ class AuthViewModel @Inject constructor(
                 when(change) {
                     is LoggedIn -> {
                         Log.e("STATE: ", "LOGGED IN")
-                        _authState.value = AuthState.LoggedIn(change.user)
+                        _authState.value = _authState.value.copy(
+                            isLoading = false,
+                            isLoggedIn = true
+                        )
                     }
                     is LoggedOut -> {
                         Log.e("STATE: ", "LOGGED OUT")
 
-                        _authState.value = AuthState.LoggedOut
+                        _authState.value = _authState.value.copy(
+                            isLoading = false,
+                            isLoggedIn = false
+                        )
                     }
                     is Removed -> {
                         Log.e("STATE: ", "LOGGED OUT REMOVED")
 
-                        _authState.value = AuthState.LoggedOut
+                        _authState.value = _authState.value.copy(
+                            isLoading = false,
+                            isLoggedIn = false
+                        )
                     }
                 }
             }
         }
     }
 
-    fun initializeDB(user: User): Boolean {
-        return initializeDBUseCase(user)
+    fun initializeDB(): Boolean {
+        return initializeDBUseCase()
     }
 
     // TODO: Create custom user class
@@ -68,10 +77,7 @@ class AuthViewModel @Inject constructor(
     }
 }
 
-sealed class AuthState<out T> {
-    data class LoggedIn<out T>(val user: T) : AuthState<T>()
-
-    object LoggedOut : AuthState<Nothing>()
-
-    object Loading : AuthState<Nothing>()
-}
+data class AppState(
+    val isLoggedIn: Boolean = false,
+    val isLoading: Boolean = true
+)

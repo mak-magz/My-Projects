@@ -45,23 +45,10 @@ fun ToDosApp(
     authViewModel: AuthViewModel = hiltViewModel(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
-    val loginUiState by authViewModel.authState.collectAsState()
-    var startDestination = "auth"
+    val appState by authViewModel.authState.collectAsState()
+    val startDestination = if (appState.isLoggedIn) "main" else "auth"
 
-    AuthStateChecker(authState = loginUiState, navController = navController) { user ->
-        user.let {
-            if (it.loggedIn) {
-                val initResult = authViewModel.initializeDB(it)
-
-                if (initResult) {
-                    startDestination = "main"
-                    Log.d("REALM INITIALIZATION: ", "SUCCESS")
-                } else {
-                    Log.e("REALM INITIALIZATION: ", "FAILED")
-                }
-            }
-        }
-    }
+    DatabaseInitializer(appState = appState, authViewModel = authViewModel)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -152,18 +139,18 @@ fun NavGraphBuilder.mainAppGraph(navController: NavHostController, drawerState: 
 }
 
 @Composable
-internal fun AuthStateChecker(authState: AuthState<*>, navController: NavHostController, userCallback: (user: User) -> Unit) {
-    when(authState) {
-        is AuthState.LoggedIn -> {
-            Log.e("STATE", "LOGGED IN")
-            userCallback(authState.user as User)
+internal fun DatabaseInitializer( appState: AppState, authViewModel: AuthViewModel)
+{
+    when(true) {
+        appState.isLoggedIn -> {
+            Log.e("APP STATE", "APP IS LOGGED IN")
+            authViewModel.initializeDB()
         }
-        is AuthState.LoggedOut -> {
-            Log.e("STATE", "LOGGED OUT")
-            navController.navigateSingleTopTo("auth")
+        appState.isLoading -> {
+            Log.e("APP STATE", "APP IS LOADING . . . ")
         }
-        is AuthState.Loading -> {
-            Log.e("AUTH STATE", "INITIALIZING AUTH STATE . . . ")
+        else -> {
+            Log.e("APP STATE", "APP IS LOGGED OUT")
         }
     }
 }
