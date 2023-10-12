@@ -3,9 +3,11 @@ package com.practice.todos.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practice.todos.domain.model.Result
 import com.practice.todos.domain.usecase.GetAuthStateUseCase
 import com.practice.todos.domain.usecase.GetCurrentUserUseCase
 import com.practice.todos.domain.usecase.InitializeDBUseCase
+import com.practice.todos.domain.usecase.LoginAnonymouslyUseCase
 import com.practice.todos.domain.usecase.LogoutUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.mongodb.LoggedIn
@@ -22,7 +24,8 @@ class AuthViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val initializeDBUseCase: InitializeDBUseCase,
     private val getAuthStateUseCase: GetAuthStateUseCase,
-    private val logoutUserUseCase: LogoutUserUseCase
+    private val logoutUserUseCase: LogoutUserUseCase,
+    private val anonLoginUseCase: LoginAnonymouslyUseCase
 ): ViewModel() {
 
     private val _authState = MutableStateFlow(AppState())
@@ -30,6 +33,23 @@ class AuthViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val user = getCurrentUser()
+            user?.let {
+                Log.e("USER STATE: ", "USER EXISTS")
+                anonLoginUseCase().collect{result ->
+                    when(result) {
+                        is Result.Error -> {
+
+                        }
+                        is Result.Success -> {
+                            _authState.value = _authState.value.copy(
+                                isLoading = false,
+                                isLoggedIn = true
+                            )
+                        }
+                    }
+                }
+            }
             getAuthStateUseCase().collect { change ->
                 when(change) {
                     is LoggedIn -> {

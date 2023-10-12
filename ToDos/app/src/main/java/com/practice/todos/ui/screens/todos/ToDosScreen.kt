@@ -40,7 +40,6 @@ fun ToDosScreen(
     categoryId: String
     ) {
 
-    Log.d("CAT ID: ", categoryId)
     Scaffold(
         modifier = modifier,
         topBar = { ToDosTopAppBar(

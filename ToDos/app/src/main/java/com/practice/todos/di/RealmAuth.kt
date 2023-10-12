@@ -20,9 +20,8 @@ class RealmAuth @Inject constructor(
 ) : Auth {
     private val app: App = App.create("application-0-hqyoc")
     override fun loginAnonymous(): Flow<Result<User>> = flow {
-        emit(Result.Loading)
         try {
-            val anon = Credentials.anonymous(reuseExisting = false)
+            val anon = Credentials.anonymous(reuseExisting = true)
             Log.d("LOGIN CRED: ", anon.toString())
             val user = app.login(anon)
             realmDB.init(user)

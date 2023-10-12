@@ -26,6 +26,13 @@ class LoginViewModel @Inject constructor(
 
     fun login() {
         viewModelScope.launch {
+            _loginUIState.update { currentState ->
+                currentState.copy(
+                    isLoggingIn = true,
+                    loginError = null,
+                    currentUser = null
+                )
+            }
             loginAnonUseCase().collect {
                 when (it) {
                     is Result.Error -> {
@@ -37,17 +44,6 @@ class LoginViewModel @Inject constructor(
                             )
                         }
                     }
-
-                    Result.Loading -> {
-                        _loginUIState.update { currentState ->
-                            currentState.copy(
-                                isLoggingIn = true,
-                                loginError = null,
-                                currentUser = null
-                            )
-                        }
-                    }
-
                     is Result.Success -> {
                         _loginUIState.update { currentState ->
                             currentState.copy(
