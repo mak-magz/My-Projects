@@ -9,6 +9,8 @@ import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.mongodb.kbson.BsonObjectId
+import org.mongodb.kbson.serialization.Bson
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,17 +43,15 @@ class RealmDB @Inject constructor() : Database {
     }
 
     override suspend fun addToDos(toDos: ToDos) {
-        realm!!.write { copyToRealm(toDos) }
+        realm?.write { copyToRealm(toDos) }
     }
 
     override suspend fun deleteToDos(id: String) {
-        realm!!.write {
-            val person = query<ToDos>(query = "_id == $0", id).first().find()
-            try {
-                person?.let { delete(it) }
-            } catch (e: Exception) {
-                Log.d("MongoRepositoryImpl", "${e.message}")
-            }
+
+        realm?.write {
+            val todoId = BsonObjectId(id)
+            val person = query<ToDos>(query = "_id == $0", todoId).first().find()
+            person?.let { delete(it) }
         }
     }
 }

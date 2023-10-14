@@ -1,10 +1,14 @@
 package com.practice.todos.ui.screens.home
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -14,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ElevatedCard
@@ -34,19 +39,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.practice.todos.HomeScreen
 import com.practice.todos.data.local.model.ToDos
 import com.practice.todos.toDosScreens
 import com.practice.todos.ui.dialogs.AddToDoCategoryDialog
 import com.practice.todos.ui.navigateToDetails
 import com.practice.todos.ui.theme.ToDosTheme
 import kotlinx.coroutines.launch
-import com.practice.todos.HomeScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +70,7 @@ fun HomeScreen(
     // Dialog
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
-    val categories by viewModel.categories
+    val categories by viewModel.todos
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -85,10 +91,13 @@ fun HomeScreen(
             color = MaterialTheme.colorScheme.background
         ) {
             CategoryList(
-                categories = categories,
+                todos = categories,
                 onItemClicked = {
                     Log.d("CATEGORY ID: ", it)
                     navController.navigateToDetails(it)
+                },
+                onDeleteIconClicked = {
+                    viewModel.deleteToDos(it)
                 }
             )
             AddToDoCategoryDialog(
@@ -146,8 +155,9 @@ fun HomeFloatingButton(onClickCallback: () -> Unit) {
 @Composable
 fun CategoryList(
     modifier: Modifier = Modifier,
-    categories: List<ToDos> = emptyList(),
-    onItemClicked: (categoryId: String) -> Unit
+    todos: List<ToDos> = emptyList(),
+    onItemClicked: (categoryId: String) -> Unit,
+    onDeleteIconClicked: (todoId: String) -> Unit
 ) {
     ToDosTheme {
         LazyVerticalGrid(
@@ -156,10 +166,11 @@ fun CategoryList(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(categories) { category ->
+            items(todos) { todo ->
                 CategoryItem(
-                    toDos = category,
-                    onClickCallback = { onItemClicked(category._id.toHexString()) }
+                    toDos = todo,
+                    onClickCallback = { onItemClicked(todo._id.toHexString()) },
+                    onDeleteCallback = { onDeleteIconClicked(todo._id.toHexString())}
                 )
             }
         }
@@ -171,7 +182,8 @@ fun CategoryList(
 fun CategoryItem(
     modifier: Modifier = Modifier,
     toDos: ToDos,
-    onClickCallback: () -> Unit
+    onClickCallback: () -> Unit,
+    onDeleteCallback: () -> Unit
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
@@ -183,11 +195,19 @@ fun CategoryItem(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth()
+                .height(intrinsicSize = IntrinsicSize.Min)
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = toDos.title
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable(onClick = onClickCallback),
+                text = toDos.title,
             )
+            Icon(imageVector = Icons.Rounded.Delete,
+                contentDescription = "Delete todo",
+                modifier = Modifier.clickable(onClick = onDeleteCallback),
+                tint = Color.Red )
         }
     }
 }
@@ -197,6 +217,7 @@ fun CategoryItem(
 fun CategoryItemPreview() {
     CategoryItem(
         toDos = ToDos().apply { title = "test" },
-        onClickCallback = {}
+        onClickCallback = {},
+        onDeleteCallback = {}
     )
 }
